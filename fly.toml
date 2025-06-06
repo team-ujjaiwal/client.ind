@@ -1,0 +1,25 @@
+app = "client.ind"  # Aapka app name jo aap fly.io par create karenge
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  # Yahan environment variables agar chahiye ho to add kar sakte hain
+  # For example:
+  # COM_GARENA_MSDK_UID = "3942040791"
+  # COM_GARENA_MSDK_PASSWORD = "EDD92B8948F4453F544C9432DFB4996D02B4054379A0EE083D8459737C50800B"
+  # COM_JWT_GENERATE_URL = "https://jwt-aditya.vercel.app/token"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  internal_port = 5000
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+
+  [[services.ports]]
+    port = 443

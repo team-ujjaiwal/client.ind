@@ -9,9 +9,9 @@ import json
 
 app = Flask(__name__)
 
-com_garena_msdk_uid = "3197059560"
-com_garena_msdk_password = "3EC146CD4EEF7A640F2967B06D7F4413BD4FB37382E0ED260E214E8BACD96734"
-com_jwt_generate_url = "https://starexxlab-jwt.vercel.app/token"
+com_garena_msdk_uid = "3942040791"
+com_garena_msdk_password = "EDD92B8948F4453F544C9432DFB4996D02B4054379A0EE083D8459737C50800B"
+com_jwt_generate_url = "https://jwt-aditya.vercel.app/token"
 
 def get_jwt():
     try:
@@ -22,7 +22,7 @@ def get_jwt():
         response = requests.get(com_jwt_generate_url, params=params)
         if response.status_code == 200:
             jwt_data = response.json()
-            return jwt_data.get("Starexx", [{}])[0].get("Token")
+            return jwt_data.get("token")  
         return None
     except Exception as e:
         print(f"Error fetching JWT: {e}")
@@ -97,7 +97,7 @@ def index():
         ]
     })
 
-@app.route('/info', methods=['GET'])
+@app.route('/api/guild-info', methods=['GET'])
 def get_player_info():
     try:
         player_id = request.args.get('uid')
@@ -105,7 +105,7 @@ def get_player_info():
             return jsonify({
                 "Error": [
                     {
-                        "message": "Player ID is required"
+                        "message": "Player UID is required"
                     }
                 ]
             }), 400
@@ -143,38 +143,38 @@ def get_player_info():
 
             try:
                 player_data = {
-                    "basic_info": {
-                        "name": parsed_data["1"]["data"]["3"]["data"],
-                        "id": player_id,
-                        "likes": parsed_data["1"]["data"]["21"]["data"],
-                        "level": parsed_data["1"]["data"]["6"]["data"],
-                        "server": parsed_data["1"]["data"]["5"]["data"],
-                        "bio": parsed_data["9"]["data"]["9"]["data"],
-                        "booyah_pass_level": parsed_data["1"]["data"]["18"]["data"],
-                        "account_created": datetime.fromtimestamp(parsed_data["1"]["data"]["44"]["data"]).strftime("%Y-%m-%d %H:%M:%S")
+                    "PlayerBasicInfo": {
+                        "PlayerName": parsed_data["1"]["data"]["3"]["data"],
+                        "ID": player_id,
+                        "Likes": parsed_data["1"]["data"]["21"]["data"],
+                        "Level": parsed_data["1"]["data"]["6"]["data"],
+                        "Server": parsed_data["1"]["data"]["5"]["data"],
+                        "Bio": parsed_data["9"]["data"]["9"]["data"],
+                        "BooyahPassLevel": parsed_data["1"]["data"]["18"]["data"],
+                        "AccountCreated": datetime.fromtimestamp(parsed_data["1"]["data"]["44"]["data"]).strftime("%Y-%m-%d %H:%M:%S")
                     }
                 }
 
                 try:
-                    player_data["animal"] = {
-                        "name": parsed_data["8"]["data"]["2"]["data"]
+                    player_data["Pet"] = {
+                        "Name": parsed_data["8"]["data"]["2"]["data"]
                     }
                 except:
-                    player_data["animal"] = None
+                    player_data["Pet"] = None
 
                 try:
                     player_data["Guild"] = {
-                        "name": parsed_data["6"]["data"]["2"]["data"],
-                        "id": parsed_data["6"]["data"]["1"]["data"],
-                        "level": parsed_data["6"]["data"]["4"]["data"],
-                        "members_count": parsed_data["6"]["data"]["6"]["data"],
-                        "leader": {
-                            "id": parsed_data["6"]["data"]["3"]["data"],
-                            "name": parsed_data["7"]["data"]["3"]["data"],
-                            "level": parsed_data["7"]["data"]["6"]["data"],
-                            "booyah_pass_level": parsed_data["7"]["data"]["18"]["data"],
-                            "likes": parsed_data["7"]["data"]["21"]["data"],
-                            "account_created": datetime.fromtimestamp(parsed_data["7"]["data"]["44"]["data"]).strftime("%Y-%m-%d %H:%M:%S")
+                        "GuildName": parsed_data["6"]["data"]["2"]["data"],
+                        "ID": parsed_data["6"]["data"]["1"]["data"],
+                        "Level": parsed_data["6"]["data"]["4"]["data"],
+                        "LiveMembers": parsed_data["6"]["data"]["6"]["data"],
+                        "Leader": {
+                            "ID": parsed_data["6"]["data"]["3"]["data"],
+                            "LeaderName": parsed_data["7"]["data"]["3"]["data"],
+                            "Level": parsed_data["7"]["data"]["6"]["data"],
+                            "BooyahPassLevel": parsed_data["7"]["data"]["18"]["data"],
+                            "Likes": parsed_data["7"]["data"]["21"]["data"],
+                            "AccountCreated": datetime.fromtimestamp(parsed_data["7"]["data"]["44"]["data"]).strftime("%Y-%m-%d %H:%M:%S")
                         }
                     }
                 except:
@@ -183,7 +183,7 @@ def get_player_info():
                 return jsonify({
                     "Ujjaiwal": [
                         {
-                            "Massage": "Player information retrieved successfully",
+                            "Massage": "Player Guild Information Retrieved Successfully",
                             "Data": player_data
                         }
                     ]
@@ -193,7 +193,7 @@ def get_player_info():
                 return jsonify({
                     "Error": [
                         {
-                            "message": f"Failed to parse player information: {str(e)}"
+                            "message": f"Failed to parse player Guild information: {str(e)}"
                         }
                     ]
                 }), 500
